@@ -1,0 +1,25 @@
+{
+  "name": "Oauth_finals",
+  "version": "1.0.0",
+  "description": "```bash\r > npm init -y\r > npm install express ejs\r > npm install nodemon -g\r > nodemon index.js\r ```",
+  "main": "index.js",
+  "dependencies": {
+    "ejs": "^3.0.1",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brem-lang/oauthfinals.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brem-lang/oauthfinals/issues"
+  },
+  "homepage": "https://github.com/brem-lang/oauthfinals#readme"
+}
