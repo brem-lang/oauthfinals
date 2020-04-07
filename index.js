@@ -1,19 +1,37 @@
 const express = require('express');
 const authRoutes = require('./routes/auth-routes');
-const passportSetup = require('./config/passport-setup')
-
+const profileRoutes = require('./routes/profile-routes');
+const passportSetup = require('./config/passport-setup');
+const passport = require('passport');
+const path = require('path');
 const app = express();
+const cookieSession = require("cookie-session");
+const keys = require('./config/keys')
+
+app.use(passport.initialize());
 
 // set up view engine
 app.set('view engine', 'ejs');
 
+// set up cookie-session
+app.use(cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [keys.session.cookieKey]
+}));
+
+// initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 // set up routes
 app.use('/auth',authRoutes);
+app.use('/profile',profileRoutes);
 
 // create home route
-app.get('/', (req, res)=>{
-    res.render('home');
+app.get('/',(req, res)=>{
+    res.render('auth/home', {user: req.user});
 });
+
 
 // listen to requests
 app.listen(3000, ()=> {
