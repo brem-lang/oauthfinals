@@ -1,8 +1,10 @@
 const express = require('express');
 const authRoutes = require('./routes/auth-routes');
+const passport = require('passport');
 const passportSetup = require('./config/passport-setup')
 
 const app = express();
+app.use(passport.initialize());
 
 // set up view engine
 app.set('view engine', 'ejs');

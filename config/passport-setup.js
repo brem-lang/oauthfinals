@@ -9,7 +9,7 @@ passport.serializeUser((user, done)=>{
 
 passport.deserializeUser((id, done)=>{
     //Who's id is this?
-    User.query(`SELECT "oauth".findbyid(${id})`,(err,res)=>{
+    User.query(`SELECT "oauth".findById(${id})`,(err,res)=>{
         if(err){
             console.log(err);
         }else{
@@ -38,7 +38,7 @@ passport.use(
         //         const sql2 = `INSERT INTO "oauth".user 
         //         VALUES( ${profile.id},
         //                 '${profile.displayName}',
-        //                 '${profile.photos[0].value}')`;
+        //                 ${profile.photos[0].value})`;
         //         User.query(sql2,(err1, res1)=>{
         //             if(err1) User.end();
         //             console.log("##############");
@@ -52,31 +52,32 @@ passport.use(
         //     }            
         // });
 
-            User.query(`CALL "oauth".insert_when_unique(${profile.id},
-                            '${profile.displayName}',
-                            '${profile.photos[0].value}');`,
-                (err,res)=>{
-                console.log(">>>>>>>>>>>>>>>>>>>>>>");
-                const _user = {
-                id: profile.id,
-                name: profile.displayName,                                
-                picture: profile.photos[0].value
-                };
+        User.query(`CALL "oauth".insert_when_unique(${profile.id},
+                                                    '${profile.displayName}',
+                                                    '${profile.photos[0].value}');`,
+                    (err,res)=>{
+                        console.log(">>>>>>>>>>>>>>>>>>>>>>");
+                        const _user = {
+                            id: profile.id,
+                            name: profile.displayName,                                
+                            picture: profile.photos[0].value
+                        };
 
-                if(err){
-                //already have the user
-                const currentUser = _user;
-                console.log('User is ', JSON.stringify(currentUser));
-                done(null, currentUser);
-                //console.log(err);
-                }else{
-                //if not, new user was created in our db
-                const newUser = _user;
-                console.log('New User created: ' + JSON.stringify(newUser));
-                done(null, newUser);
-                // console.log(res.rows[0]);
-                }
-                });
+                        if(err){
+                            //already have the user
+                            const currentUser = _user;
+                            console.log('User is ', JSON.stringify(currentUser));
+                            done(null, currentUser);
+                            //console.log(err);
+                        }else{
+                            //if not, new user was created in our db
+                            const newUser = _user;
+                            console.log('New User created: ' + JSON.stringify(newUser));
+                            done(null, newUser);
+                            // console.log(res.rows[0]);
+                        }
+                    });
+
 
     })
 );
