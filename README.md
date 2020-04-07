@@ -145,3 +145,91 @@ User.query(`CALL "oauth".insert_when_unique(${profile.id},
 
             });
 ```
+
+## Part 6: Cookie Session
+
+1. Require cookie-session module ```npm install cookie-session```
+```bash
+# Use cookie-session to control our HTTP session
+# HTTP session allows web servers to maintain user identity and to store user-specific data during request/response interactions between a client application and a web application.
+```
+2. Encrypt key
+```js
+// set up cookie-session
+app.use(cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: ['secret encrypt key']
+}));
+```
+3. Update ```config/keys.js``` and initialize passport
+```js
+// config/keys.js
+module.exports = {
+    google:{...},
+    postgresdb:{...},
+    session:{
+        cookieKey: 'thisismyuniquecookiekey'
+    }
+};
+// index.js
+app.use(passport.initialize());
+app.use(passport.session());
+```
+4. OAuth Test
+* Test our web app @ loalhost:3000
+* Login using Google
+* Then you need to see a json value printed on your web page
+
+## Part 6-1: Redirecting Users
+
+1. Create a user-defined middleware in ```routes/profile-routes.js```
+```js
+const authCheck = (req, res, next)=>{
+    console.log("*********** Performing AuthCheck **************");
+    console.log(req.user);
+    if(!req.user){
+        // If user is not logged in then
+        res.redirect('/auth/login');
+    }
+    else{
+        // If user is logged in then
+        next();
+    }
+}
+```
+
+2. Add authCheck middleware and update profile route
+```js
+router.get('/', authCheck, (req,res)=>{
+    const user = req.user;    
+    res.send('you are logged in, this is your profile - ' + user._name);
+});
+```
+
+3. Update ```config/passport-user.js``` deserializeUser method
+```js
+passport.deserializeUser((id, done)=>{
+    //Who's id is this?
+    User.query(`select row_to_json (u) from ( SELECT "oauth".findById(${id}) as user) u;`,(err,res)=>{
+        if(err){
+            console.log(err);
+        }else{                        
+            const user = res.rows[0].row_to_json.user;
+            console.log(">>>> deserializeUser >>>>> ",user);
+            done(null, user); 
+        }        
+    });
+});
+```
+For more information about PostgreSQL JSON Functions and Operators e.g. ```row_to_json```, view the link [here](https://www.postgresql.org/docs/9.5/functions-json.html).
+
+4. Check if all slugs/routes redirecting to the correct target slugs
+
+* Before Logging in (note: need to clear cache)
+
+  - Navigate to ```http://localhost:3000/profile``` then our app will *redirect* to ```http://localhost:3000/auth/login```.
+  - Navigate to ```http://localhost:3000/auth/login``` and login using google then our app will ask your gmail account. If google successfully verified the account then our app will *redirect* to ```http://localhost:3000/profile```.
+
+* After a successful login
+
+  - Navigate to ```http://localhost:3000/auth/login``` then our app will *redirect* to ```http://localhost:3000/profile```.
