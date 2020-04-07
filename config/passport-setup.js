@@ -3,6 +3,22 @@ const GoogleStrategy = require('passport-google-oauth20');
 const keys = require('./keys');
 const User = require('../models/user-model');
 
+passport.serializeUser((user, done)=>{
+    done(null, user.id); // A piece of info and save it to cookies
+});
+
+passport.deserializeUser((id, done)=>{
+    //Who's id is this?
+    User.query(`SELECT "oauth".findbyid(${id})`,(err,res)=>{
+        if(err){
+            console.log(err);
+        }else{
+            console.log(res.rows[0]);
+            done(null, user); 
+        }        
+    });
+});
+
 passport.use(
     new GoogleStrategy({
         // options for the google strat
@@ -36,7 +52,7 @@ passport.use(
         //     }            
         // });
 
-                        User.query(`CALL "oauth".insert_when_unique(${profile.id},
+            User.query(`CALL "oauth".insert_when_unique(${profile.id},
                             '${profile.displayName}',
                             '${profile.photos[0].value}');`,
                 (err,res)=>{
