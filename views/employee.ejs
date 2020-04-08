@@ -24,7 +24,9 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
 <!-- sweet alert -->
 <script src="sweetalert2.min.js"></script>
 <link rel="stylesheet" href="sweetalert2.min.css">
@@ -33,43 +35,6 @@
 <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
 </head>
 <body>
-
-    <style>
-        .card {
-          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-          max-width: 300px;
-          margin: auto;
-          text-align: center;
-          font-family: arial;
-        }
-        
-     
-        
-        .button {
-          border: none;
-          outline: 0;
-          display: inline-block;
-          padding: 8px;
-          color: white;
-          background-color: #3498DB;
-          text-align: center;
-          cursor: pointer;
-          width: 100%;
-          font-size: 18px;
-        }
-        
-  
-        
-        button:hover, a:hover {
-          opacity: 0.7;
-        }
-        </style>
-
-    <!-- <center>
-        <a class="btn  btn-success role="button" href="/">Homepage</a>
-        <a class="btn btn-primary" role="button" href="/auth/login">Login</a>  
-        <a class="btn btn-info" role="button" href="/auth/logout">Logout</a>
-    </center> --> 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">OAUTH</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,43 +57,33 @@
           </li>
         </div>
       </nav>
-
-      <!-- <h1>Welcome to your profile, <%=user._name%> </h1>    
-      <p>
-          extra information about you
-          <img src="<%= user._picture %>" alt="picture">
-          <p>This is your profile thumbnail</p>
-      </p> -->
       <br>
+      <table id="table" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i < result.length; i++) { %>
+          <tr>
+            <td><%=result[i].row_to_json.employee_id%></td>
+            <td><%=result[i].row_to_json.first_name%></td>
+            <td><%=result[i].row_to_json.last_name%></td>
+            <td><%=result[i].row_to_json.email%></td>
+          </tr>
+            <% } %>
+          </tbody>
+          </table>
 
-      <div class="card">
-        <img src="<%= user._picture %>" alt="picture" style="width:100%">
-        <br>
-        <h3><b><%=user._name%></b></h3>
-        <p class="title">BSIT-2B</p>
-        <div style="margin: 24px 0;">
-      
-        </div>
-        <p>
-          <a href="#view" data-toggle="modal" class="button">Click here to View Tables</a>
-        </p>
-      </div>
-      
-
-      <div id="view" class="modal fade bd-example-modal-lg">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <button type="button" class="btn btn-outline-primary btn-lg btn-block">List of employees</button>
-              <br>
-              <button type="button" class="btn btn-outline-secondary btn-lg btn-block">list of departments</button>
-              <br>
-              <button type="button" class="btn btn-outline-success btn-lg btn-block">List of employee deptartment</button>
-              <br>
-              <button type="button" class="btn btn-outline-info btn-lg btn-block">Salary</button>
-            </div>
-         </div>
-      </div>
-  
+            <script>
+                  $(document).ready(function() {
+                      $('#table').DataTable();
+                  } );
+          </script>
 
 </body>
 </html>

@@ -1,6 +1,7 @@
 const express = require('express');
 const authRoutes = require('./routes/auth-routes');
 const profileRoutes = require('./routes/profile-routes');
+const hrRoutes = require('./routes/hr-routes');
 const passportSetup = require('./config/passport-setup');
 const passport = require('passport');
 const path = require('path');
@@ -26,10 +27,11 @@ app.use(passport.session());
 // set up routes
 app.use('/auth',authRoutes);
 app.use('/profile',profileRoutes);
+app.use('/hr',hrRoutes);
 
 // create home route
-app.get('/',(req, res)=>{
-    res.render('auth/home', {user: req.user});
+app.get('/', (req, res)=>{
+    res.render('home');
 });
 
 
